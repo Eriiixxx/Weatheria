@@ -1,5 +1,5 @@
 <?php
-require_once '../../config/config.php';
+require_once __DIR__ . '/../../config/config.php';
 
 class Weather {
 
@@ -29,7 +29,7 @@ class Weather {
     }
 
     public function getAirPollution() {
-        $url = "https://api.openweathermap.org/data/2.5/air-pollution?lat=14.599512&lon=120.984222&appid=" . $this->apiKey;
+        $url = "https://api.openweathermap.org/data/2.5/air_pollution?lat=14.599512&lon=120.984222&units=metric&appid=" . $this->apiKey;
         $this->fetchData($url);
     }
 

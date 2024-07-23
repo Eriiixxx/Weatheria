@@ -1,7 +1,10 @@
 <?php
-require_once '../models/Weather.php';
+require_once __DIR__ . '/../models/Weather.php';
 
 class WeatherController {
+
+    // include_once "./Model/Login/login.php";
+
 
     private $weather;
 
@@ -9,26 +12,26 @@ class WeatherController {
         $this->weather = new Weather();
     }
 
-    public function handleRequest($action) {
-        switch ($action) {
-            case 'current':
-                $this->weather->getWeather();
-                break;
-            case 'forecast':
-                $this->weather->getForecast();
-                break;
-            case 'air-pollution':
-                $this->weather->getAirPollution();
-                break;
-            case 'geocoding':
-                $this->weather->getGeoCoding();
-                break;
-            case 'reverse-geocoding':
-                $this->weather->getGeoCodingReverse();
-                break;
-            default:
-                echo json_encode(['error' => 'Invalid action specified.']);
-        }
+    public function toGetCurrent() {
+        return $this->weather->getWeather();
     }
+
+    public function toGetForecast() {
+        return $this->weather->getForecast();
+    }
+
+    public function toGetPollution() {
+        return $this->weather->getAirPollution();
+    }
+
+    public function toGetGeo() {
+        return $this->weather->getGeoCoding();
+    }
+
+    public function toGetRevGeo() {
+        return $this->weather->getGeoCodingReverse();
+    }
+
 }
+
 ?>
