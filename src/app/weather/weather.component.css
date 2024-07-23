@@ -160,7 +160,7 @@
     font-family: 'Material Symbols Rounded';
     font-style: normal;
     font-weight: 400;
-    src: url(font/material-symbol-rounded.woff2) format('woff2');
+    src: url(../material-symbol-rounded.woff2) format('woff2');
 }
 
 .m-icon {
