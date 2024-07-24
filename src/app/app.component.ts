@@ -81,6 +81,7 @@ export class AppComponent implements OnInit {
   }
 
   onSearch(): void {
+    console.log(this.searchLocation);
     if (this.searchLocation) {
       this.fetchWeatherData(this.searchLocation);
     }
