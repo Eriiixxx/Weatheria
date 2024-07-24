@@ -20,12 +20,53 @@ export class AppComponent implements OnInit {
   geoCoding: any;
   geoCodingReverse: any;
   searchLocation: string = '';
+  error: string = '';
 
   constructor(private weatherService: WeatherService) {}
 
   ngOnInit(): void {
     console.log('AppComponent initialized');
-    this.fetchWeatherData('Manila');
+    this.requestUserLocation();
+  }
+
+  requestUserLocation(): void {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          this.fetchWeatherDataByCoords(lat, lon);
+        },
+        (error) => {
+          this.error = 'Unable to retrieve your location';
+          console.error('Geolocation error:', error);
+          // Optional: Provide fallback data or default location
+          this.fetchWeatherData('Manila'); // Default location
+        }
+      );
+    } else {
+      this.error = 'Geolocation is not supported by this browser.';
+      console.error(this.error);
+      // Optional: Provide fallback data or default location
+      this.fetchWeatherData('Manila'); // Default location
+    }
+  }
+
+  fetchWeatherDataByCoords(lat: number, lon: number): void {
+    this.weatherService.getGeoCodingReverse(lat, lon).subscribe({
+      next: (data) => {
+        if (data && data.length > 0) {
+          const location = data[0].name;
+          this.fetchWeatherData(location);
+        } else {
+          this.error = 'Unable to retrieve location information.';
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching reverse geocoding:', error);
+        this.error = 'Unable to retrieve location information.';
+      }
+    });
   }
 
   fetchWeatherData(location: string): void {
@@ -68,16 +109,6 @@ export class AppComponent implements OnInit {
         console.error('Error fetching geocoding:', error);
       }
     });
-
-    this.weatherService.getGeoCodingReverse(14.5995, 120.9842).subscribe({
-      next: (data) => {
-        this.geoCodingReverse = data;
-        console.log('Reverse GeoCoding:', this.geoCodingReverse);
-      },
-      error: (error) => {
-        console.error('Error fetching reverse geocoding:', error);
-      }
-    });
   }
 
   onSearch(): void {
@@ -85,5 +116,9 @@ export class AppComponent implements OnInit {
     if (this.searchLocation) {
       this.fetchWeatherData(this.searchLocation);
     }
+  }
+
+  onCurrentLocationClick(): void {
+    this.requestUserLocation();
   }
 }

@@ -34,4 +34,5 @@ export class WeatherService {
     const params = new HttpParams().set('lat', lat.toString()).set('lon', lon.toString());
     return this.http.get<any>(`${this.apiUrl}/reverse-geocoding`, { params });
   }
+
 }

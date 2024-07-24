@@ -20,5 +20,14 @@ class WeatherController {
     public function toGetPollution($location) {
         return $this->weather->getAirPollution($location);
     }
+
+    public function toReverseGeocode($lat, $lon) {
+        return $this->weather->reverseGeocode($lat, $lon);
+    }
+
+    public function toGetReverseGeocoding($lat, $lon) {
+        return $this->weather->getReverseGeoData($lat, $lon);
+    }
+    
 }
 ?>

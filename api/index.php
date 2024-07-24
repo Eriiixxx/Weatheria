@@ -21,7 +21,6 @@ header("Content-Type: application/json");
 
 $tunnel = new WeatherController();
 
-// Converts request link to array
 if (isset($_REQUEST['request'])) {
     $request = explode('/', $_REQUEST['request']);
 } else {
@@ -29,10 +28,10 @@ if (isset($_REQUEST['request'])) {
     exit;
 }
 
-// Extract location parameter
 $location = isset($_GET['location']) ? $_GET['location'] : '';
+$lat = isset($_GET['lat']) ? $_GET['lat'] : '';
+$lon = isset($_GET['lon']) ? $_GET['lon'] : '';
 
-// Main request switch endpoints
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
         switch ($request[0]) {
@@ -46,6 +45,14 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
             case 'air-pollution':
                 echo $tunnel->toGetPollution($location);
+                break;
+
+            case 'reverse-geocode':
+                echo $tunnel->toReverseGeocode($lat, $lon);
+                break;
+
+            case 'reverse-geocoding':
+                echo $tunnel->toGetReverseGeocoding($lat, $lon);
                 break;
 
             default:
