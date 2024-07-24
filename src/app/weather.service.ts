@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -10,23 +10,28 @@ export class WeatherService {
 
   constructor(private http: HttpClient) {}
 
-  getCurrentWeather(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/current`);
+  getCurrentWeather(location: string): Observable<any> {
+    const params = new HttpParams().set('location', location);
+    return this.http.get<any>(`${this.apiUrl}/current`, { params });
   }
 
-  getForecast(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/forecast`);
+  getForecast(location: string): Observable<any> {
+    const params = new HttpParams().set('location', location);
+    return this.http.get<any>(`${this.apiUrl}/forecast`, { params });
   }
 
-  getAirPollution(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/air-pollution`);
+  getAirPollution(location: string): Observable<any> {
+    const params = new HttpParams().set('location', location);
+    return this.http.get<any>(`${this.apiUrl}/air-pollution`, { params });
   }
 
-  getGeoCoding(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/geocoding`);
+  getGeoCoding(location: string): Observable<any> {
+    const params = new HttpParams().set('location', location);
+    return this.http.get<any>(`${this.apiUrl}/geocoding`, { params });
   }
 
-  getGeoCodingReverse(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/reverse-geocoding`);
+  getGeoCodingReverse(lat: number, lon: number): Observable<any> {
+    const params = new HttpParams().set('lat', lat.toString()).set('lon', lon.toString());
+    return this.http.get<any>(`${this.apiUrl}/reverse-geocoding`, { params });
   }
 }

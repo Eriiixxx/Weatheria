@@ -18,29 +18,50 @@ class Weather {
         echo $response;
     }
 
-    public function getWeather() {
-        $url = "https://api.openweathermap.org/data/2.5/weather?lat=14.599512&lon=120.984222&units=metric&appid=" . $this->apiKey;
-        $this->fetchData($url);
+    public function getWeather($location) {
+        $geoData = $this->getGeoData($location);
+        if ($geoData && count($geoData) > 0) {
+            $lat = $geoData[0]['lat'];
+            $lon = $geoData[0]['lon'];
+            $url = "https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&units=metric&appid=" . $this->apiKey;
+            $this->fetchData($url);
+        } else {
+            echo json_encode(['error' => 'Location not found.']);
+        }
     }
 
-    public function getForecast() {
-        $url = "https://api.openweathermap.org/data/2.5/forecast?lat=14.599512&lon=120.984222&units=metric&appid=" . $this->apiKey;
-        $this->fetchData($url);
+    public function getForecast($location) {
+        $geoData = $this->getGeoData($location);
+        if ($geoData && count($geoData) > 0) {
+            $lat = $geoData[0]['lat'];
+            $lon = $geoData[0]['lon'];
+            $url = "https://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&units=metric&appid=" . $this->apiKey;
+            $this->fetchData($url);
+        } else {
+            echo json_encode(['error' => 'Location not found.']);
+        }
     }
 
-    public function getAirPollution() {
-        $url = "https://api.openweathermap.org/data/2.5/air_pollution?lat=14.599512&lon=120.984222&units=metric&appid=" . $this->apiKey;
-        $this->fetchData($url);
+    public function getAirPollution($location) {
+        $geoData = $this->getGeoData($location);
+        if ($geoData && count($geoData) > 0) {
+            $lat = $geoData[0]['lat'];
+            $lon = $geoData[0]['lon'];
+            $url = "https://api.openweathermap.org/data/2.5/air_pollution?lat=$lat&lon=$lon&units=metric&appid=" . $this->apiKey;
+            $this->fetchData($url);
+        } else {
+            echo json_encode(['error' => 'Location not found.']);
+        }
     }
 
-    public function getGeoCoding() {
-        $url = "http://api.openweathermap.org/geo/1.0/direct?q=manila&limit=5&appid=" . $this->apiKey;
-        $this->fetchData($url);
-    }
-
-    public function getGeoCodingReverse() {
-        $url = "http://api.openweathermap.org/geo/1.0/reverse?lat=14.599512&lon=120.984222&limit=5&appid=" . $this->apiKey;
-        $this->fetchData($url);
+    private function getGeoData($location) {
+        $url = "http://api.openweathermap.org/geo/1.0/direct?q=" . urlencode($location) . "&limit=1&appid=" . $this->apiKey;
+        $response = file_get_contents($url);
+        if ($response === FALSE) {
+            return null;
+        }
+        return json_decode($response, true);
     }
 }
 ?>
+

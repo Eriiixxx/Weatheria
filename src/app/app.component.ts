@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { WeatherService } from './weather.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [HttpClientModule, CommonModule],
+  imports: [HttpClientModule, CommonModule, FormsModule],
   providers: [WeatherService],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
@@ -18,28 +19,17 @@ export class AppComponent implements OnInit {
   airPollution: any;
   geoCoding: any;
   geoCodingReverse: any;
+  searchLocation: string = '';
 
   constructor(private weatherService: WeatherService) {}
 
   ngOnInit(): void {
     console.log('AppComponent initialized');
+    this.fetchWeatherData('Manila');
+  }
 
-    // this.facultyService.patchData(restOfFacultyInfo, `faculty/${this.editData?.faculty_ID}`).subscribe({
-    //   next: (res: any) => {
-    //     console.log(res)
-    //     this.messageService.sendMessage("Faculty Successfully Edited!", 1)
-    //   },
-    //   error: (err) => {
-    //     console.log(err)
-    //     this.messageService.sendMessage("An unexpected Error has occurred!", -1)
-    //   },
-    //   complete: () => {
-    //     this.store.dispatch(loadCollegeProfile());
-    //     this.goBack();
-    //   }
-    // })
-
-    this.weatherService.getCurrentWeather().subscribe({
+  fetchWeatherData(location: string): void {
+    this.weatherService.getCurrentWeather(location).subscribe({
       next: (data) => {
         this.currentWeather = data;
         console.log('Current Weather:', this.currentWeather);
@@ -49,7 +39,7 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.weatherService.getForecast().subscribe({
+    this.weatherService.getForecast(location).subscribe({
       next: (data) => {
         this.forecast = data;
         console.log('Forecast:', this.forecast);
@@ -59,7 +49,7 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.weatherService.getAirPollution().subscribe({
+    this.weatherService.getAirPollution(location).subscribe({
       next: (data) => {
         this.airPollution = data;
         console.log('Air Pollution:', this.airPollution);
@@ -69,7 +59,7 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.weatherService.getGeoCoding().subscribe({
+    this.weatherService.getGeoCoding(location).subscribe({
       next: (data) => {
         this.geoCoding = data;
         console.log('GeoCoding:', this.geoCoding);
@@ -79,7 +69,7 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.weatherService.getGeoCodingReverse().subscribe({
+    this.weatherService.getGeoCodingReverse(14.5995, 120.9842).subscribe({
       next: (data) => {
         this.geoCodingReverse = data;
         console.log('Reverse GeoCoding:', this.geoCodingReverse);
@@ -88,5 +78,11 @@ export class AppComponent implements OnInit {
         console.error('Error fetching reverse geocoding:', error);
       }
     });
+  }
+
+  onSearch(): void {
+    if (this.searchLocation) {
+      this.fetchWeatherData(this.searchLocation);
+    }
   }
 }

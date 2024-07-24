@@ -21,39 +21,35 @@ header("Content-Type: application/json");
 
 $tunnel = new WeatherController();
 
-
-//Converts request link to array
+// Converts request link to array
 if (isset($_REQUEST['request'])) {
     $request = explode('/', $_REQUEST['request']);
-    //echo json_encode($request);
 } else {
-    //echo json_encode(array('message' => 'failed request'));
     http_response_code(404);
+    exit;
 }
 
+// Extract location parameter
+$location = isset($_GET['location']) ? $_GET['location'] : '';
 
-// //Main request switch endpoints
+// Main request switch endpoints
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
         switch ($request[0]) {
             case 'current':
-                echo $tunnel->toGetCurrent();
+                echo $tunnel->toGetCurrent($location);
                 break;
 
             case 'forecast':
-                echo $tunnel->toGetForecast();
+                echo $tunnel->toGetForecast($location);
                 break;
 
             case 'air-pollution':
-                echo $tunnel->toGetPollution();
+                echo $tunnel->toGetPollution($location);
                 break;
 
-            case 'geocoding':
-                echo $tunnel->toGetGeo();
-                break;
-
-            case 'reverse-geocoding':
-                echo $tunnel->toGetRevGeo();
+            default:
+                http_response_code(404);
                 break;
         }
         break;
@@ -62,16 +58,4 @@ switch ($_SERVER['REQUEST_METHOD']) {
         http_response_code(404);
         break;
 }
-
-
-
-
-// if (!isset($_GET['action'])) {
-//     echo json_encode(['error' => 'No action specified.']);
-//     exit;
-// }
-
-$controller = new WeatherController();
-// $action = $_GET['action'];
-// $controller->handleRequest($action);
 ?>
