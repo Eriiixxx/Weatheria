@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
   geoCodingReverse: any;
   searchLocation: string = '';
   error: string = '';
+  isCelsius: boolean = true;
 
   constructor(private weatherService: WeatherService) {}
 
@@ -121,4 +122,13 @@ export class AppComponent implements OnInit {
   onCurrentLocationClick(): void {
     this.requestUserLocation();
   }
+
+  toggleTemperatureUnit(): void {
+    this.isCelsius = !this.isCelsius;
+  }
+
+  convertTemperature(tempCelsius: number): number {
+    return this.isCelsius ? tempCelsius : (tempCelsius * 9/5) + 32;
+  }
+
 }

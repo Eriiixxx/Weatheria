@@ -15,7 +15,7 @@
           <span class="m-icon">arrow_back</span>
         </button>
       </div>
-
+      
       <div class="search-result" data-search-result>
         <ul class="view-list" data-search-list>
           <li class="view-item" *ngFor="let item of geoCoding">
@@ -30,10 +30,14 @@
       </div>
     </div>
 
+    
+
     <div class="header-actions">
       <button class="icon-btn has-state" aria-label="open search" data-search-toggler>
         <span class="m-icon icon">search</span>
       </button>
+
+      <button class="switch-button" (click)="toggleTemperatureUnit()">Switch to °{{ isCelsius ? 'F' : 'C' }}</button>
 
       <a href="#" class="btn-primary has-state" data-current-location-btn (click)="onCurrentLocationClick()">
         <span class="m-icon">my_location</span>
@@ -65,8 +69,8 @@
            <h2 class="title-2 card-title">Now</h2>
 
           <div class="weapper" *ngIf="currentWeather">
-            <p class="heading">{{ currentWeather.main.temp | number:'1.0-0' }}&deg;<sup>C</sup></p>
-
+            <p class="heading">{{ convertTemperature(currentWeather.main.temp) | number:'1.0-0'}}°{{ isCelsius ? 'C' : 'F' }}</p>
+            
             <img src="../assets/images/sunny.png" width="64" height="64" alt="Sunny Day" class="weather-icon">
           </div>
 
@@ -109,7 +113,7 @@
                 <img src="../assets/images/rain.png" width="36" height="36" alt="Rain" class="weather-icon">
 
                 <span class="span">
-                  <p class="title-2">{{ forecast.list[8].main.temp | number:'1.0-0' }}&deg;<sup>C</sup></p>
+                  <p class="title-2">{{ convertTemperature(forecast.list[8].main.temp) | number:'1.0-0' }}&deg;<sup>{{ isCelsius ? 'C' : 'F' }}</sup></p>
                 </span>
               </div>
 
@@ -125,7 +129,7 @@
                 <img src="../assets/images/rain.png" width="36" height="36" alt="Rain" class="weather-icon">
 
                 <span class="span">
-                  <p class="title-2">{{ forecast.list[16].main.temp | number:'1.0-0' }}&deg;<sup>C</sup></p>
+                  <p class="title-2">{{ convertTemperature(forecast.list[16].main.temp) | number:'1.0-0' }}&deg;<sup>{{ isCelsius ? 'C' : 'F' }}</sup></p>
                 </span>
               </div>
 
@@ -141,7 +145,7 @@
                 <img src="../assets/images/rain.png" width="36" height="36" alt="Rain" class="weather-icon">
 
                 <span class="span">
-                  <p class="title-2">{{ forecast.list[24].main.temp | number:'1.0-0' }}&deg;<sup>C</sup></p>
+                  <p class="title-2">{{ convertTemperature(forecast.list[24].main.temp) | number:'1.0-0' }}&deg;<sup>{{ isCelsius ? 'C' : 'F' }}</sup></p>
                 </span>
               </div>
 
@@ -157,7 +161,7 @@
                 <img src="../assets/images/rain.png" width="36" height="36" alt="Rain" class="weather-icon">
 
                 <span class="span">
-                  <p class="title-2">{{ forecast.list[32].main.temp | number:'1.0-0' }}&deg;<sup>C</sup></p>
+                  <p class="title-2">{{ convertTemperature(forecast.list[32].main.temp) | number:'1.0-0' }}&deg;<sup>{{ isCelsius ? 'C' : 'F' }}</sup></p>
                 </span>
               </div>
 
@@ -173,7 +177,7 @@
                 <img src="../assets/images/rain.png" width="36" height="36" alt="Rain" class="weather-icon">
 
                 <span class="span">
-                  <p class="title-2">{{ forecast.list[39].main.temp | number:'1.0-0' }}&deg;<sup>C</sup></p>
+                  <p class="title-2">{{ convertTemperature(forecast.list[39].main.temp) | number:'1.0-0' }}&deg;<sup>{{ isCelsius ? 'C' : 'F' }}</sup></p>
                 </span>
               </div>
 
@@ -317,8 +321,8 @@
 
               <div class="wrapper">
                 <span class="m-icon">thermostat</span>
-
-                <p class="title-1">{{ currentWeather.main.feels_like | number:'1.0-0' }}&deg;<sup>c</sup></p>
+                
+                <p class="title-1">{{ convertTemperature(currentWeather.main.feels_like) | number:'1.0-0' }}°<sup>{{ isCelsius ? 'C' : 'F' }}</sup></p>
               </div>
               
             </div>
@@ -342,8 +346,8 @@
                 <p class="body-3">{{ (forecast.list[0].dt * 1000) | date:'shortTime' }}</p>
 
                 <img src="../assets/images/rain.png"  width="48" height="48" loading="lazy" alt="" class="weather-icon" title="">
-  
-                <p class="body-3">{{ forecast.list[0].main.temp | number:'1.0-0' }}&deg;<sup>C</sup></p>
+                
+                <p class="body-3">{{ convertTemperature(forecast.list[0].main.temp) | number:'1.0-0' }}&deg;<sup>{{ isCelsius ? 'C' : 'F' }}</sup></p>
 
               </div>
               
@@ -352,11 +356,11 @@
             <li class="slider-item">
               <div class="card card-sm slider-card">
 
-                <p class="body-3">{{ (forecast.list[1].dt * 1000) | date:'shortTime' }}</p>
+                <p class="body-3">{{ forecast.list[1].dt * 1000 | date:'shortTime' }}</p>
 
                 <img src="../assets/images/rain.png"  width="48" height="48" loading="lazy" alt="" class="weather-icon" title="">
   
-                <p class="body-3">{{ forecast.list[1].main.temp | number:'1.0-0' }}&deg;<sup>C</sup></p>
+                <p class="body-3">{{ convertTemperature(forecast.list[1].main.temp) | number:'1.0-0' }}&deg;<sup>{{ isCelsius ? 'C' : 'F' }}</sup></p>
               </div>
               
             </li>
@@ -367,8 +371,8 @@
                 <p class="body-3">{{ (forecast.list[2].dt * 1000) | date:'shortTime' }}</p>
 
                 <img src="../assets/images/rain.png"  width="48" height="48" loading="lazy" alt="" class="weather-icon" title="">
-  
-                <p class="body-3">{{ forecast.list[2].main.temp | number:'1.0-0' }}&deg;<sup>C</sup></p>
+                
+                <p class="body-3">{{ convertTemperature(forecast.list[2].main.temp) | number:'1.0-0' }}&deg;<sup>{{ isCelsius ? 'C' : 'F' }}</sup></p>
 
               </div>
               
@@ -381,7 +385,7 @@
 
                 <img src="../assets/images/rain.png"  width="48" height="48" loading="lazy" alt="" class="weather-icon" title="">
   
-                <p class="body-3">{{ forecast.list[3].main.temp | number:'1.0-0' }}&deg;<sup>C</sup></p>
+                <p class="body-3">{{ convertTemperature(forecast.list[3].main.temp) | number:'1.0-0' }}&deg;<sup>{{ isCelsius ? 'C' : 'F' }}</sup></p>
 
               </div>
               
@@ -394,7 +398,7 @@
 
                 <img src="../assets/images/rain.png"  width="48" height="48" loading="lazy" alt="" class="weather-icon" title="">
   
-                <p class="body-3">{{ forecast.list[4].main.temp | number:'1.0-0' }}&deg;<sup>C</sup></p>
+                <p class="body-3">{{ convertTemperature(forecast.list[4].main.temp) | number:'1.0-0' }}&deg;<sup>{{ isCelsius ? 'C' : 'F' }}</sup></p>
 
               </div>
               
@@ -407,7 +411,7 @@
 
                 <img src="../assets/images/rain.png"  width="48" height="48" loading="lazy" alt="" class="weather-icon" title="">
   
-                <p class="body-3">{{ forecast.list[5].main.temp | number:'1.0-0' }}&deg;<sup>C</sup></p>
+                <p class="body-3">{{ convertTemperature(forecast.list[5].main.temp) | number:'1.0-0' }}&deg;<sup>{{ isCelsius ? 'C' : 'F' }}</sup></p>
 
               </div>
               
@@ -420,7 +424,7 @@
 
                 <img src="../assets/images/rain.png"  width="48" height="48" loading="lazy" alt="" class="weather-icon" title="">
   
-                <p class="body-3">{{ forecast.list[6].main.temp | number:'1.0-0' }}&deg;<sup>C</sup></p>
+                <p class="body-3">{{ convertTemperature(forecast.list[6].main.temp) | number:'1.0-0' }}&deg;<sup>{{ isCelsius ? 'C' : 'F' }}</sup></p>
 
               </div>
               
