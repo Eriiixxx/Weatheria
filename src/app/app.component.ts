@@ -39,19 +39,21 @@ export class AppComponent implements OnInit {
           this.fetchWeatherDataByCoords(lat, lon);
         },
         (error) => {
-          this.error = 'Unable to retrieve your location';
+          this.error = '';
           console.error('Geolocation error:', error);
           // Optional: Provide fallback data or default location
-          this.fetchWeatherData('Manila'); // Default location
-        }
+          this.fetchWeatherData('manila'); // Default location
+        },
+        { enableHighAccuracy: true } // Enable high accuracy
       );
     } else {
       this.error = 'Geolocation is not supported by this browser.';
       console.error(this.error);
       // Optional: Provide fallback data or default location
-      this.fetchWeatherData('Manila'); // Default location
+      this.fetchWeatherData('manila'); // Default location
     }
   }
+  
 
   fetchWeatherDataByCoords(lat: number, lon: number): void {
     this.weatherService.getGeoCodingReverse(lat, lon).subscribe({
@@ -119,6 +121,12 @@ export class AppComponent implements OnInit {
     }
   }
 
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      this.onSearch();
+    }
+  }
+
   onCurrentLocationClick(): void {
     this.requestUserLocation();
   }
@@ -130,5 +138,42 @@ export class AppComponent implements OnInit {
   convertTemperature(tempCelsius: number): number {
     return this.isCelsius ? tempCelsius : (tempCelsius * 9/5) + 32;
   }
+
+  getAqiDescription(aqi: number): { label: string, longDescription: string } {
+    switch (aqi) {
+      case 1:
+        return {
+          label: 'Good',
+          longDescription: 'Air quality is considered satisfactory, and air pollution poses little or no risk.'
+        };
+      case 2:
+        return {
+          label: 'Fair',
+          longDescription: 'Air quality is acceptable; however, some pollutants may be present, which could be a concern for a very small number of people who are unusually sensitive to air pollution.'
+        };
+      case 3:
+        return {
+          label: 'Moderate',
+          longDescription: 'Air quality is acceptable; however, there may be a concern for some people, especially those with respiratory or heart conditions, as well as children and older adults.'
+        };
+      case 4:
+        return {
+          label: 'Poor',
+          longDescription: 'Air quality is likely to be a health concern for some people, particularly those with pre-existing conditions. The general public may also start to be affected.'
+        };
+      case 5:
+        return {
+          label: 'Very Poor',
+          longDescription: 'Health alert: everyone may experience more serious health effects. The entire population is likely to be affected.'
+        };
+      default:
+        return {
+          label: 'Unknown',
+          longDescription: 'AQI data is not available.'
+        };
+    }
+  }
+
+
 
 }

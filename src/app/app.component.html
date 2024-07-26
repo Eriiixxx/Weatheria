@@ -7,7 +7,7 @@
 
     <div class="search-view" data-search-view>
       <div class="search-wrapper">
-        <input type="search" name="search" placeholder="Search city..." autocomplete="off" class="search-field" [(ngModel)]="searchLocation">
+        <input type="search" name="search" placeholder="Search city..." autocomplete="off" class="search-field" [(ngModel)]="searchLocation" (keydown)="onKeyDown($event)">
 
         <span class="m-icon leading-icon" (click)="onSearch()">search</span>
 
@@ -241,8 +241,8 @@
 
               </div>
 
-              <span class="badge aqi-1 label-1" title="aqi message">
-                Good
+              <span class="badge aqi-{{ airPollution.list[0].main.aqi }} label-1" [attr.title]="getAqiDescription(airPollution.list[0].main.aqi).longDescription">
+                {{ getAqiDescription(airPollution.list[0].main.aqi).label }}
               </span>
 
             </div>
