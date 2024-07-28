@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     console.log('AppComponent initialized');
     this.requestUserLocation();
+    console.log(this.currentWeather);
   }
 
   requestUserLocation(): void {

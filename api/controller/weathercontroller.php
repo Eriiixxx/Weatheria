@@ -30,7 +30,7 @@ class WeatherController {
     }
     
     public function toGetGeoData($location) {
-        return json_encode($this->weather->getGeoData($location));
+        return $this->weather->getGeoData($location);
     }
 }
 ?>
