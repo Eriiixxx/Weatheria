@@ -54,6 +54,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
             case 'reverse-geocoding':
                 echo $tunnel->toGetReverseGeocoding($lat, $lon);
                 break;
+                
+            case 'geocoding':
+                echo json_encode($tunnel->toGetGeoData($location));
+                break;
 
             default:
                 http_response_code(404);

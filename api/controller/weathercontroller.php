@@ -29,5 +29,8 @@ class WeatherController {
         return $this->weather->getReverseGeoData($lat, $lon);
     }
     
+    public function toGetGeoData($location) {
+        return json_encode($this->weather->getGeoData($location));
+    }
 }
 ?>
