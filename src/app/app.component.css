@@ -3,7 +3,7 @@
     /**COLOR**/
     --primary: #2b077f; 
     --on-primary: #898695; 
-    --background: #7fbbda;
+    --background-image: url('/assets/Sunny.gif');
     --on-background: #000000;
     --surface: #dbd7e3;
     --on-surface: #0c0228;
@@ -126,12 +126,13 @@
   }
   
   body {
-      background-color: var(--background);
+      background-image: url('/assets/Sunny.gif');;
       color: var(--on-background);
       font-size: var(--body-3);
       overflow: hidden;
       /* height: 300vh; */
   }
+
   
   :focus-visible {
       outline: 2px solid var(--white);
