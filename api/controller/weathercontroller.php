@@ -32,5 +32,9 @@ class WeatherController {
     public function toGetGeoData($location) {
         return $this->weather->getGeoData($location);
     }
+
+    public function toGetLocationSuggestions($query) {
+        return $this->weather->getLocationSuggestions($query);
+    }
 }
 ?>

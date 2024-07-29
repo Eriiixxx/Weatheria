@@ -4,11 +4,11 @@
     --primary: #2b077f; 
     --on-primary: #898695; 
     --background: #7fbbda;
-    --on-background: #000000;
-    --surface: #dbd7e3;
-    --on-surface: #0c0228;
-    --on-surface-variant: #140638; 
-    --on-surface-variant-2: #92929a;
+    --on-background: #ffffff;
+    --surface: #ffffff4e;
+    --on-surface: #ffffff;
+    --on-surface-variant: #ffffff; 
+    --on-surface-variant-2: #ffffff;
     --outline: #40403d;
     --bg-aqi-1: #89E589;
     --on-bg-aqi-1: #1F331F;
@@ -21,9 +21,9 @@
     --bg-aqi-5: #E589B7;
     --on-bg-aqi-5: #331F29;
     --white: hsl(0, 0%, 100%);
-    --white-alpha-4: hsla(0, 0%, 100%, 0.04);
+    --white-alpha-4: hsla(0, 70%, 47%, 0.04);
     --white-alpha-8: hsla(0, 74%, 44%, 0.08);
-    --black-alpha-10: hsla(0, 0%, 0%, 0.051);
+    --black-alpha-10: hsla(0, 0%, 100%, 0.095);
   
     /**GRADIENT**/
     --gradient-1: linear-gradient(180deg, hsla(270, 5%, 7%, 0) 0%, hsla(270, 5%, 7%, 0.8) 65%, hsl(270, 5%, 7%) 100%);
@@ -126,7 +126,7 @@
   }
   
   body {
-      background-color: var(--background);
+      background: linear-gradient(to top, #120434, #0d4d5c);
       color: var(--on-background);
       font-size: var(--body-3);
       overflow: hidden;

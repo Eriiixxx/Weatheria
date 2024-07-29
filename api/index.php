@@ -28,7 +28,8 @@ if (isset($_REQUEST['request'])) {
     exit;
 }
 
-$location = isset($_GET['location']) ? $_GET['location'] : '';
+// Assume the second part of the request is the location
+$location = isset($request[1]) ? $request[1] : '';
 $lat = isset($_GET['lat']) ? $_GET['lat'] : '';
 $lon = isset($_GET['lon']) ? $_GET['lon'] : '';
 
@@ -57,6 +58,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 
             case 'geocoding':
                 echo json_encode($tunnel->toGetGeoData($location));
+                break;
+                
+            case 'location-suggestions':
+                echo $tunnel->toGetLocationSuggestions($location);
                 break;
 
             default:

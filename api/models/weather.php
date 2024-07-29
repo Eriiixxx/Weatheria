@@ -72,6 +72,11 @@ class Weather {
         $url = "https://api.openweathermap.org/geo/1.0/reverse?lat=$lat&lon=$lon&limit=1&appid=" . $this->apiKey;
         $this->fetchData($url);
     }
+
+    public function getLocationSuggestions($query) {
+        $url = "http://api.openweathermap.org/geo/1.0/direct?q=" . urlencode($query) . "&limit=5&appid=" . $this->apiKey;
+        $this->fetchData($url);
+    }
     
 }
 ?>

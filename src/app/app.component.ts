@@ -3,6 +3,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { WeatherService } from './weather.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -17,18 +19,50 @@ export class AppComponent implements OnInit {
   currentWeather: any;
   forecast: any;
   airPollution: any;
-  geoCoding: any;
+  geoCoding: any[] = [];
   geoCodingReverse: any;
   searchLocation: string = '';
   error: string = '';
   isCelsius: boolean = true;
+  suggestions: any[] = [];
+  searchSubject = new Subject<string>();
 
   constructor(private weatherService: WeatherService) {}
 
   ngOnInit(): void {
     console.log('AppComponent initialized');
     this.requestUserLocation();
-    console.log(this.currentWeather);
+    this.loadTemperatureUnit();
+  
+    this.searchSubject.pipe(
+      debounceTime(300), // wait for 300ms pause in events
+      distinctUntilChanged(), // ignore if next search query is same as previous
+      switchMap((query) => {
+        console.log('Query:', query); // Log the query
+        return this.weatherService.getGeoCoding(query);
+      }) // switch to new observable on each new search
+    ).subscribe({
+      next: (data) => {
+        console.log('Data received:', data); // Log the received data
+        this.suggestions = data;
+        console.log('Suggestions:', this.suggestions);
+      },
+      error: (error) => {
+        console.error('Error fetching suggestions:', error);
+      }
+    });
+  }
+  
+
+  loadTemperatureUnit(): void {
+    const storedUnit = localStorage.getItem('temperatureUnit');
+    if (storedUnit) {
+      this.isCelsius = storedUnit === 'C';
+    }
+  }
+
+  saveTemperatureUnit(): void {
+    localStorage.setItem('temperatureUnit', this.isCelsius ? 'C' : 'F');
   }
 
   requestUserLocation(): void {
@@ -42,7 +76,6 @@ export class AppComponent implements OnInit {
         (error) => {
           this.error = '';
           console.error('Geolocation error:', error);
-          // Optional: Provide fallback data or default location
           this.fetchWeatherData('manila'); // Default location
         },
         { enableHighAccuracy: true } // Enable high accuracy
@@ -50,11 +83,9 @@ export class AppComponent implements OnInit {
     } else {
       this.error = 'Geolocation is not supported by this browser.';
       console.error(this.error);
-      // Optional: Provide fallback data or default location
       this.fetchWeatherData('manila'); // Default location
     }
   }
-  
 
   fetchWeatherDataByCoords(lat: number, lon: number): void {
     this.weatherService.getGeoCodingReverse(lat, lon).subscribe({
@@ -122,10 +153,23 @@ export class AppComponent implements OnInit {
     }
   }
 
+  onSearchInputChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    console.log('Input value:', value); // Log the input value
+    this.searchSubject.next(value);
+  }
+
+
   onKeyDown(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
       this.onSearch();
     }
+  }
+
+  onSuggestionClick(suggestion: any): void {
+    this.searchLocation = suggestion.name;
+    this.onSearch();
   }
 
   onCurrentLocationClick(): void {
@@ -134,6 +178,7 @@ export class AppComponent implements OnInit {
 
   toggleTemperatureUnit(): void {
     this.isCelsius = !this.isCelsius;
+    this.saveTemperatureUnit();
   }
 
   convertTemperature(tempCelsius: number): number {
@@ -174,7 +219,4 @@ export class AppComponent implements OnInit {
         };
     }
   }
-
-
-
 }

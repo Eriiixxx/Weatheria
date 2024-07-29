@@ -3,7 +3,7 @@
     /**COLOR**/
     --primary: #2b077f; 
     --on-primary: #898695; 
-    --background-image: url('/assets/Sunny.gif');
+    --background: #7fbbda;
     --on-background: #000000;
     --surface: #dbd7e3;
     --on-surface: #0c0228;
@@ -126,7 +126,7 @@
   }
   
   body {
-      background-image: url('/assets/Sunny.gif');;
+      background-image: url(../assets/default.jpg);
       color: var(--on-background);
       font-size: var(--body-3);
       overflow: hidden;
@@ -234,8 +234,8 @@
 }
 
 .btn-primary {
-    background-color: var(--primary);
-    color: var(--on-primary);
+    background-color: var(--bg-aqi-5);
+    color: white;
     height: 48px;
     line-height: 48px;
     max-width: max-content;
