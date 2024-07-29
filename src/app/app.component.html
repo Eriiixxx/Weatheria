@@ -17,6 +17,7 @@
 
       <div class="search-result active" *ngIf="suggestions.length > 0" data-search-result>
         <ul class="view-list" data-search-list>
+          <li *ngIf="loading" class="view-item">Loading...</li>
           <li class="view-item" *ngFor="let suggestion of suggestions" (click)="onSuggestionClick(suggestion)">
             <span class="m-icon">location_on</span>
             <div>

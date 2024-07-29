@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
     exit(0);
 }
+
 require_once __DIR__ . '/controller/WeatherController.php';
 
 header("Content-Type: application/json");
@@ -28,14 +29,15 @@ if (isset($_REQUEST['request'])) {
     exit;
 }
 
-// Assume the second part of the request is the location
+// Extract path parameters
+$endpoint = isset($request[0]) ? $request[0] : '';
 $location = isset($request[1]) ? $request[1] : '';
-$lat = isset($_GET['lat']) ? $_GET['lat'] : '';
-$lon = isset($_GET['lon']) ? $_GET['lon'] : '';
+$lat = isset($request[1]) ? $request[1] : '';
+$lon = isset($request[2]) ? $request[2] : '';
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
-        switch ($request[0]) {
+        switch ($endpoint) {
             case 'current':
                 echo $tunnel->toGetCurrent($location);
                 break;
@@ -48,18 +50,19 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo $tunnel->toGetPollution($location);
                 break;
 
-            case 'reverse-geocode':
-                echo $tunnel->toReverseGeocode($lat, $lon);
+            case 'reverse-geocoding':
+                if ($lat && $lon) {
+                    echo $tunnel->toReverseGeocode($lat, $lon);
+                } else {
+                    http_response_code(400);
+                    echo json_encode(['error' => 'Latitude and longitude are required.']);
+                }
                 break;
 
-            case 'reverse-geocoding':
-                echo $tunnel->toGetReverseGeocoding($lat, $lon);
-                break;
-                
             case 'geocoding':
                 echo json_encode($tunnel->toGetGeoData($location));
                 break;
-                
+
             case 'location-suggestions':
                 echo $tunnel->toGetLocationSuggestions($location);
                 break;

@@ -27,7 +27,7 @@ export class WeatherService {
   }
 
   getGeoCodingReverse(lat: number, lon: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/reverse-geocoding?lat=${lat}&lon=${lon}`);
+    return this.http.get<any>(`${this.apiUrl}/reverse-geocoding/${lat}/${lon}`);
   }
 
   getLocationSuggestions(query: string): Observable<any> {

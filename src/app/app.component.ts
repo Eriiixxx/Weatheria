@@ -25,7 +25,9 @@ export class AppComponent implements OnInit {
   error: string = '';
   isCelsius: boolean = true;
   suggestions: any[] = [];
-  searchSubject = new Subject<string>();
+  searchTerms = new Subject<string>();
+  loading: boolean = false;
+
 
   constructor(private weatherService: WeatherService) {}
 
@@ -34,26 +36,30 @@ export class AppComponent implements OnInit {
     this.requestUserLocation();
     this.loadTemperatureUnit();
   
-    this.searchSubject.pipe(
-      debounceTime(300), // wait for 300ms pause in events
+    this.searchTerms.pipe(
+      debounceTime(500), // wait for 300ms pause in events
       distinctUntilChanged(), // ignore if next search query is same as previous
-      switchMap((query) => {
-        console.log('Query:', query); // Log the query
-        return this.weatherService.getGeoCoding(query);
+      switchMap((term: string) => {
+        console.log('Term:', term); // Log the query
+        return this.weatherService.getGeoCoding(term);
       }) // switch to new observable on each new search
     ).subscribe({
       next: (data) => {
         console.log('Data received:', data); // Log the received data
+        this.loading = false;
         this.suggestions = data;
         console.log('Suggestions:', this.suggestions);
       },
       error: (error) => {
+        this.loading = false;
         console.error('Error fetching suggestions:', error);
       }
     });
   }
   
 
+
+  // TEMPEARTURE CONVERTER
   loadTemperatureUnit(): void {
     const storedUnit = localStorage.getItem('temperatureUnit');
     if (storedUnit) {
@@ -65,6 +71,9 @@ export class AppComponent implements OnInit {
     localStorage.setItem('temperatureUnit', this.isCelsius ? 'C' : 'F');
   }
 
+
+
+  //AUTO LOCATION
   requestUserLocation(): void {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -157,7 +166,7 @@ export class AppComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const value = input.value;
     console.log('Input value:', value); // Log the input value
-    this.searchSubject.next(value);
+    this.searchTerms.next(input.value);
   }
 
 
@@ -169,6 +178,7 @@ export class AppComponent implements OnInit {
 
   onSuggestionClick(suggestion: any): void {
     this.searchLocation = suggestion.name;
+    this.suggestions = [];
     this.onSearch();
   }
 
