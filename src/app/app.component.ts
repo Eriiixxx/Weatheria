@@ -33,19 +33,36 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('AppComponent initialized');
-    this.requestUserLocation();
+    // Check if location data is stored in localStorage
+    const storedLocation = localStorage.getItem('location');
+    const storedLatitude = localStorage.getItem('latitude');
+    const storedLongitude = localStorage.getItem('longitude');
+
+    if (storedLocation) {
+      this.fetchWeatherData(storedLocation);
+    } else if (storedLatitude && storedLongitude) {
+      this.fetchWeatherDataByCoords(parseFloat(storedLatitude), parseFloat(storedLongitude));
+    } else {
+      this.requestUserLocation();
+    }
+
+
     this.loadTemperatureUnit();
   
     this.searchTerms.pipe(
-      debounceTime(500), // wait for 300ms pause in events
+      debounceTime(300), // wait for 300ms pause in events
       distinctUntilChanged(), // ignore if next search query is same as previous
       switchMap((term: string) => {
-        console.log('Term:', term); // Log the query
-        return this.weatherService.getGeoCoding(term);
+        //console.log('Term:', term); // Log the query
+        if (term.trim() === '') {
+          return []; // return an empty array if the search term is empty
+        } else {
+          return this.weatherService.getGeoCoding(term);
+        }
       }) // switch to new observable on each new search
     ).subscribe({
       next: (data) => {
-        console.log('Data received:', data); // Log the received data
+        //console.log('Data received:', data); // Log the received data
         this.loading = false;
         this.suggestions = data;
         console.log('Suggestions:', this.suggestions);
@@ -97,6 +114,10 @@ export class AppComponent implements OnInit {
   }
 
   fetchWeatherDataByCoords(lat: number, lon: number): void {
+
+    localStorage.setItem('latitude', lat.toString());
+    localStorage.setItem('longitude', lon.toString());
+
     this.weatherService.getGeoCodingReverse(lat, lon).subscribe({
       next: (data) => {
         if (data && data.length > 0) {
@@ -114,6 +135,9 @@ export class AppComponent implements OnInit {
   }
 
   fetchWeatherData(location: string): void {
+
+    localStorage.setItem('location', location);
+
     this.weatherService.getCurrentWeather(location).subscribe({
       next: (data) => {
         this.currentWeather = data;
@@ -158,6 +182,10 @@ export class AppComponent implements OnInit {
   onSearch(): void {
     console.log(this.searchLocation);
     if (this.searchLocation) {
+      // Clear previous coordinates from localStorage
+      localStorage.removeItem('latitude');
+      localStorage.removeItem('longitude');
+      
       this.fetchWeatherData(this.searchLocation);
     }
   }
@@ -165,7 +193,7 @@ export class AppComponent implements OnInit {
   onSearchInputChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     const value = input.value;
-    console.log('Input value:', value); // Log the input value
+    //console.log('Input value:', value); // Log the input value
     this.searchTerms.next(input.value);
   }
 
