@@ -60,7 +60,7 @@ class Weather {
     }
 
     public function getGeoData($location) {
-        $url = "http://api.openweathermap.org/geo/1.0/direct?q=" . $location . "&limit=1&appid=" . $this->apiKey;
+        $url = "http://api.openweathermap.org/geo/1.0/direct?q=" . $location . "&limit=5&appid=" . $this->apiKey;
         $response = file_get_contents($url);
         if ($response === FALSE) {
             return null;
